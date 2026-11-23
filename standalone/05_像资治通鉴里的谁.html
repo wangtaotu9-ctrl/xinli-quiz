@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>测一测，你像《资治通鉴》里的谁｜心里那点事</title>
+<meta name="description" content="趣味自我觉察小测试，凭第一直觉选，答案只在本地计算。">
+<style>/* 心里那点事 · 趣味小测 —— 大字报杂志风 */
+:root{
+  --paper:#f7f5ef;
+  --paper2:#efece3;
+  --ink:#1d1b18;
+  --ink2:#5a534b;
+  --ink3:#938b80;
+  --line:#ddd6c9;
+  --hl:#f0457c;         /* 粉高亮 */
+  --hl2:#ffe45c;        /* 黄标签 */
+  --blue:#2f4bd8;
+  --card:#fffdf8;
+  --shadow:0 10px 30px rgba(60,45,30,.09);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;padding:0 0 46px;background:var(--card);box-shadow:0 0 40px rgba(60,45,30,.06)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 6px;font-size:12px;color:var(--ink3);letter-spacing:.5px}
+.topbar a{color:var(--ink3);text-decoration:none}
+.brand{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--ink);letter-spacing:1px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--hl)}
+
+/* ---------- 封面 ---------- */
+.cover{padding:14px 22px 8px}
+.vol{display:flex;justify-content:space-between;font-size:11px;letter-spacing:2px;color:var(--ink3);border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:20px;font-weight:600}
+.cover-tag{display:inline-block;background:var(--hl2);color:var(--ink);font-size:12px;font-weight:700;padding:5px 11px;border-radius:2px;transform:rotate(-1.5deg);letter-spacing:1px}
+.cover-title{font-size:37px;line-height:1.22;font-weight:900;letter-spacing:-1.5px;margin:18px 0 12px}
+.cover-title .hl{background:var(--hl);color:#fff;padding:0 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone;display:inline}
+.cover-sub{font-size:14px;color:var(--ink2);margin:0 0 24px;line-height:1.8}
+.checklist{list-style:none;margin:0 0 26px;padding:0;border-top:1px solid var(--line)}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:10px 2px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.checklist li .ck{color:var(--blue);font-weight:900;flex:0 0 auto}
+.checklist li b{color:var(--ink);font-weight:700}
+.cover-btn,.btn{
+  display:block;width:100%;border:0;border-radius:0;padding:17px 18px;background:var(--ink);color:#fff;
+  font-size:16px;font-weight:800;letter-spacing:1px;cursor:pointer;font-family:inherit;
+  transition:transform .12s ease,opacity .12s ease;
+}
+.cover-btn:active,.btn:active{transform:scale(.99);opacity:.88}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line);font-weight:600}
+.btn.small{padding:13px;font-size:14px}
+.btn.hl{background:var(--hl)}
+.btn-row{display:flex;gap:10px;margin-top:10px}
+.btn-row .btn{flex:1}
+.meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin:14px 0 0;letter-spacing:.5px}
+.meta b{color:var(--ink2)}
+
+/* ---------- 付费门禁 ---------- */
+.paywall{margin:0 0 0;border-top:1px solid var(--line);background:var(--paper2);padding:22px 22px 26px}
+.paywall .lock{width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.paywall h3{font-size:19px;margin:0 0 6px;font-weight:900}
+.paywall p{font-size:13px;color:var(--ink2);margin:0 0 16px;line-height:1.8}
+.price{font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--hl);margin:0 0 4px}
+.price small{font-size:13px;color:var(--ink3);font-weight:500;letter-spacing:0;margin-left:6px}
+.code-input{
+  width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:14px 15px;
+  font-size:15px;letter-spacing:1px;color:var(--ink);font-family:inherit;outline:none;margin-bottom:10px;
+}
+.code-input:focus{border-color:var(--hl)}
+.err{font-size:12.5px;color:var(--hl);min-height:18px;margin:0 0 8px}
+.pay-note{font-size:11.5px;color:var(--ink3);line-height:1.75;margin:14px 0 0}
+
+/* ---------- 答题 ---------- */
+.quiz{padding:22px 22px 0}
+.qcount{font-size:11px;letter-spacing:2px;color:var(--ink3);font-weight:700}
+.progress{height:5px;background:var(--paper2);border-radius:99px;overflow:hidden;margin:9px 0 24px}
+.progress i{display:block;height:100%;background:var(--hl);border-radius:99px;transition:width .25s ease}
+.qtitle{font-size:21px;line-height:1.6;margin:0 0 8px;font-weight:800;letter-spacing:-.3px}
+.qhint{font-size:12.5px;color:var(--ink3);margin:0 0 20px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:14px 15px;
+  font-size:14.5px;color:var(--ink2);cursor:pointer;text-align:left;font-family:inherit;
+  display:flex;align-items:center;gap:11px;transition:all .15s ease;line-height:1.55;
+}
+.opt:active{transform:scale(.99)}
+.opt:hover{border-color:var(--ink)}
+.opt .k{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--ink3);flex:0 0 auto}
+.opt.on{border-color:var(--hl);background:#fff2f6;color:var(--ink)}
+.opt.on .k{background:var(--hl);border-color:var(--hl);color:#fff}
+.backlink{margin-top:20px;text-align:center;font-size:12.5px;color:var(--ink3);cursor:pointer}
+
+/* ---------- 结果 ---------- */
+.result{padding:22px 22px 0}
+.result-tag{font-size:11px;letter-spacing:2px;color:var(--hl);font-weight:800}
+.result-title{font-size:30px;line-height:1.3;margin:10px 0 6px;font-weight:900;letter-spacing:-1px}
+.result-lead{font-size:14px;color:var(--ink2);margin:0 0 18px}
+.concentration{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--ink3);margin-bottom:18px}
+.concentration b{font-size:32px;color:var(--hl);font-weight:900;letter-spacing:-1px}
+.result-body{font-size:14.5px;color:var(--ink2);line-height:1.9;border-top:1px solid var(--line);padding-top:16px}
+.result-body p{margin:0 0 12px}
+.bars{margin:20px 0 6px}
+.bar{margin-bottom:11px}
+.bar .lab{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-bottom:4px}
+.bar .lab b{color:var(--ink)}
+.bar .track{height:7px;background:var(--paper2);border-radius:99px;overflow:hidden}
+.bar .track i{display:block;height:100%;background:var(--hl);border-radius:99px;transition:width .7s ease}
+.bar.top .track i{background:var(--ink)}
+.gift{background:var(--hl2);border-radius:8px;padding:15px 16px;margin:18px 0 0;font-size:14px;color:var(--ink);line-height:1.8;font-weight:600}
+.gift .lab{font-size:10px;letter-spacing:2px;color:var(--ink3);display:block;margin-bottom:5px;font-weight:700}
+.share-box{margin-top:22px;border-top:1px dashed var(--line);padding-top:18px}
+.share-box .lab{font-size:11.5px;color:var(--ink3);margin-bottom:8px;letter-spacing:1px}
+.share-text{background:var(--paper2);border-radius:8px;padding:14px;font-size:13px;color:var(--ink2);line-height:1.8;white-space:pre-wrap}
+.allresults{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.allresults h4{font-size:14px;margin:0 0 12px;font-weight:800}
+.allrow{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--paper2);font-size:12.5px;color:var(--ink2)}
+.allrow .n{font-size:11px;color:var(--ink3);width:22px;flex:0 0 auto}
+.allrow .nm{font-weight:700;color:var(--ink);width:92px;flex:0 0 auto}
+.allrow .ds{line-height:1.6}
+
+.note{font-size:11px;color:var(--ink3);line-height:1.8;margin:22px 22px 0;padding-top:14px;border-top:1px solid var(--line)}
+.src{font-size:11px;color:var(--ink3);line-height:1.8;margin:10px 22px 0}
+.src a{color:var(--ink2)}
+.footer{text-align:center;font-size:11px;color:var(--ink3);padding:24px 20px 6px;line-height:1.8}
+.toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:rgba(29,27,24,.94);color:#fff;font-size:13px;padding:11px 20px;border-radius:99px;opacity:0;transition:all .25s ease;pointer-events:none;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- 首页 ---------- */
+.hero{padding:26px 22px 14px}
+.hero .vol{margin-bottom:16px}
+.hero h1{font-size:31px;line-height:1.28;font-weight:900;letter-spacing:-1px;margin:0 0 10px}
+.hero p{font-size:13.5px;color:var(--ink2);margin:0;line-height:1.8}
+.testcard{display:block;text-decoration:none;color:inherit;margin:0 22px 14px;border:1.5px solid var(--ink);border-radius:4px;padding:18px 18px 16px;background:#fff;position:relative;box-shadow:4px 4px 0 var(--ink)}
+.testcard .vol{font-size:10px;border:0;margin:0 0 10px;padding:0;letter-spacing:2px;color:var(--ink3)}
+.testcard h2{font-size:21px;line-height:1.35;margin:0 0 8px;font-weight:900;letter-spacing:-.5px}
+.testcard .hl{background:var(--hl);color:#fff;padding:0 5px}
+.testcard p{font-size:12.5px;color:var(--ink2);margin:0 0 14px;line-height:1.7}
+.testcard .foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);border-top:1px solid var(--line);padding-top:11px}
+.testcard .foot .p{color:var(--hl);font-weight:900;font-size:15px}
+.testcard .foot .go{font-weight:800;color:var(--ink)}
+.notice{margin:8px 22px 0;background:var(--paper2);border-radius:6px;padding:14px 15px;font-size:12px;color:var(--ink2);line-height:1.85}
+.notice b{color:var(--ink)}
+
+/* ============================================================
+   主题一 · 青绿（城市测试）—— 复刻抖音截图封面
+   ============================================================ */
+.wrap.theme-teal{
+  --paper:#fbfaf5;--paper2:#eef4f1;--ink:#1b2421;--ink2:#4c5a54;--ink3:#93a29b;
+  --line:#d9e6e0;--hl:#3f9c8f;--hl2:#d7efe8;--blue:#3f9c8f;--card:#ffffff;
+  --teal:#3f9c8f;--teal-d:#2f7d72;--teal-l:#e6f4f0;
+}
+.theme-teal .brand .dot{background:var(--teal)}
+.theme-teal .cover-title .hl{background:var(--teal)}
+.theme-teal .cover-tag{background:var(--teal);color:#fff;transform:rotate(-1.5deg)}
+.theme-teal .checklist li .ck{
+  width:20px;height:20px;flex:0 0 auto;border-radius:50%;background:var(--teal);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;line-height:1;
+}
+.theme-teal .cover-btn{
+  background:var(--teal);color:#fff;border-radius:99px;font-size:17px;padding:15px;
+  box-shadow:0 6px 16px rgba(63,156,143,.28);max-width:230px;margin:0 auto;
+}
+.theme-teal .btn.hl{background:var(--teal)}
+.theme-teal .code-input:focus{border-color:var(--teal)}
+.theme-teal .price,.theme-teal .result-tag,.theme-teal .concentration b{color:var(--teal-d)}
+.theme-teal .progress i,.theme-teal .bar .track i{background:var(--teal)}
+.theme-teal .opt.on{border-color:var(--teal);background:var(--teal-l);color:var(--ink)}
+.theme-teal .opt.on .k{background:var(--teal);border-color:var(--teal)}
+.theme-teal .opt{border-radius:99px;padding:13px 16px}
+.theme-teal .opt:hover{border-color:var(--teal)}
+.theme-teal .opt .k{border-radius:50%;background:var(--teal-l);border-color:var(--teal-l);color:var(--teal-d)}
+.theme-teal .gift{background:var(--teal-l)}
+.theme-teal .err{color:var(--teal-d)}
+
+/* 4 维度胶囊网格 */
+.checklist.pill{list-style:none;margin:0 0 20px;padding:0;border:0;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.checklist.pill li{
+  display:flex;gap:8px;align-items:center;border:1.5px solid var(--line);border-radius:99px;
+  padding:9px 11px;background:#fff;font-size:13px;box-shadow:0 2px 8px rgba(40,80,70,.04);
+}
+.checklist.pill li .ck{width:20px;height:20px;flex:0 0 auto;border-radius:50%;background:var(--teal);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;line-height:1}
+.checklist.pill li .pt{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.checklist.pill li b{font-size:13px;color:var(--ink);font-weight:800}
+.checklist.pill li small{font-size:10.5px;color:var(--ink3);margin-top:2px}
+
+/* 封面插画 */
+.cover-art{margin:6px 0 18px;line-height:0;border-radius:14px;overflow:hidden}
+.cover-art svg{width:100%;height:auto;display:block}
+.slogan{
+  font-family:"Kaiti SC","STKaiti","KaiTi","楷体",cursive;font-style:italic;
+  font-size:17px;color:var(--teal-d);text-align:right;margin:-4px 4px 18px;
+  transform:rotate(-3deg);letter-spacing:1px;font-weight:700;
+}
+.slogan::after{content:"";display:block;width:120px;height:2px;background:var(--teal);margin:5px 0 0 auto;opacity:.55;border-radius:99px;transform:rotate(-2deg)}
+
+/* ============================================================
+   主题二 · 水墨（资治通鉴历史人物）
+   ============================================================ */
+.wrap.theme-ink{
+  --paper:#f3ece0;--paper2:#e9dfcc;--ink:#26221c;--ink2:#5c5344;--ink3:#9a8f7c;
+  --line:#d8ccb4;--hl:#a8402f;--hl2:#ecd9a8;--blue:#6b6a4a;--card:#faf5ea;
+  --seal:#a8402f;
+  font-family:"Songti SC","STSong","SimSun","宋体",serif;
+}
+.theme-ink{background:#e9dfcc}
+.theme-ink .brand .dot{background:var(--seal);border-radius:2px}
+.theme-ink .cover-title{letter-spacing:0}
+.theme-ink .cover-title .hl{background:var(--seal)}
+.theme-ink .cover-tag{background:var(--seal);color:#fff;transform:none;border-radius:2px}
+.theme-ink .checklist li .ck{color:var(--seal);font-weight:900}
+.theme-ink .cover-btn{background:var(--seal);border-radius:2px;box-shadow:3px 3px 0 rgba(168,64,47,.25)}
+.theme-ink .btn.hl{background:var(--seal)}
+.theme-ink .code-input:focus{border-color:var(--seal)}
+.theme-ink .price,.theme-ink .result-tag,.theme-ink .concentration b{color:var(--seal)}
+.theme-ink .progress i,.theme-ink .bar .track i{background:var(--seal)}
+.theme-ink .opt.on{border-color:var(--seal);background:#f6ead9;color:var(--ink)}
+.theme-ink .opt.on .k{background:var(--seal);border-color:var(--seal)}
+.theme-ink .opt{border-radius:3px}
+.theme-ink .gift{background:var(--hl2)}
+.theme-ink .err{color:var(--seal)}
+.theme-ink .checklist.pill li{border-radius:3px;box-shadow:2px 2px 0 rgba(92,83,68,.12)}
+.theme-ink .checklist.pill li .ck{background:var(--seal);border-radius:2px}
+.theme-ink .slogan{color:var(--seal);font-size:16px}
+.theme-ink .slogan::after{background:var(--seal)}
+.theme-ink .result-title,.theme-ink .cover-title,.theme-ink .testcard h2{font-family:"Songti SC","STSong","SimSun",serif}
+
+/* 首页主题色卡片（用内联 class 标注） */
+.testcard.teal-card{box-shadow:4px 4px 0 var(--teal,#3f9c8f);border-color:#3f9c8f}
+.testcard.teal-card .hl{background:#3f9c8f}
+.testcard.teal-card .foot .p{color:#3f9c8f}
+.testcard.ink-card{box-shadow:4px 4px 0 #a8402f;border-color:#a8402f}
+.testcard.ink-card .hl{background:#a8402f}
+.testcard.ink-card .foot .p{color:#a8402f}
+</style></head>
+<body><div class="wrap theme-ink"><div id="app"></div></div>
+<script>/* ============================================================
+   上架配置 · 你只需要改这一个文件
+   改完后重新上传/部署即可生效，不用碰其它文件
+   ============================================================ */
+window.SHOP_CONFIG = {
+  // 1) 你的商品链接：闲鱼 / 小红书店铺 / 抖音小店 的 0.99 元商品页
+  //    买家点「去拍下」会跳到这里；留空则按钮不显示
+  shopUrl: "",            // 例："https://www.goofish.com/item?id=xxxxx"
+
+  // 2) 价格展示（仅文案，不参与收款）
+  price: "0.99",
+
+  // 3) 解锁码：付款后由「自动发货」发给买家，买家在测试页输入即可开始
+  //    这里做成「一批通码」，简单好上手；要「一人一码」请看文档里的平台方案
+  //    ⚠️ 上线前请把 DEMO2026 删掉，只留你自己的码
+  codes: {
+    "ta":        ["DEMO2026", "TA-520", "XINDONG-01"],
+    "banwei":    ["DEMO2026", "BW-996", "BANWEI-01"],
+    "innerdrama":["DEMO2026", "NX-108", "NEIXIN-01"],
+    "city":      ["DEMO2026", "CITY-01", "CHENGSHI-01"],
+    "zizhi":     ["DEMO2026", "ZZTJ-01", "JIAN-01"]
+  },
+
+  // 4) 自动发货消息模板（复制去平台后台用，{link} 换成部署后的链接，{code} 换成码）
+  deliveryText: "感谢拍下～\n测试链接：{link}\n解锁码：{code}\n打开链接输入解锁码即可开始，答案只在你自己手机里计算，不上传。\n（虚拟商品，一经发出不支持退款，介意慎拍；仅供娱乐，不是心理诊断）",
+
+  // 5) 品牌名（会显示在每页顶部）
+  series: "心里那点事 · 趣味小测"
+};
+</script>
+<script>/* NO.05 测一测，你像《资治通鉴》里的谁 —— 24 题 · 10 位人物 · 水墨封面（考处境选择，不考史实背诵） */
+window.QUIZ_DATA = {
+  id: "zizhi",
+  vol: "VOL.05 资治通鉴特辑",
+  quizCount: "24 QUIZ",
+  tag: "不问史实，只看你在处境里怎么选",
+  title: "测一测，<br>你像《资治通鉴》<br><span class='hl'>里的谁</span>",
+  subtitle: "同一道难题，有人先动手，有人先等人。看看你做事的样子，落在了哪一段故事里。",
+  minutes: "4",
+  disclaimer: "本测试为趣味娱乐向的自我觉察小游戏，不是历史知识测验，也不是心理测评或人格诊断。人物性格为《资治通鉴》叙事的通俗化转译，非史料考据，不含对历史人物的评价。结果只来自你自己的选择，不构成任何职业或处世建议。",
+  source: "人物取材自《资治通鉴》所载叙事（如官渡与赤壁之争、淝水之战、贞观君臣论治、诸葛治蜀、司马氏后发等），均作现代化情境转译，不设史实背诵门槛。可读原文：<a href='https://zh.wikisource.org/wiki/資治通鑑' target='_blank' rel='noopener'>维基文库《资治通鉴》</a>、<a href='https://ctext.org/zizhi-tongjian/zh' target='_blank' rel='noopener'>中国哲学书电子化计划</a>。题目与解读均为原创。",
+  theme: "ink",
+  slogan: "以史为镜，照见做事的你 →",
+  pill: true,
+  checks: [
+    ["临事决断", "先动还是先等"],
+    ["用人分寸", "扛下还是分出去"],
+    ["进退节奏", "进得早还是退得稳"],
+    ["压力下反应", "硬顶还是转圜"],
+  ],
+  coverArt: "<svg viewBox='0 0 480 190' xmlns='http://www.w3.org/2000/svg'>\n<rect width='480' height='190' fill='#f0e7d5'/>\n<!-- 远山 水墨 -->\n<path d='M0 140 Q70 96 130 138 Q180 108 230 140 Q290 100 350 138 Q410 110 480 140 L480 190 L0 190Z' fill='#cdbfa0' opacity='.7'/>\n<path d='M0 158 Q90 128 170 156 Q250 128 330 156 Q410 132 480 156 L480 190 L0 190Z' fill='#b9a986' opacity='.55'/>\n<!-- 竹简卷轴 -->\n<g transform='translate(150,26)'>\n<rect x='0' y='0' width='180' height='120' rx='3' fill='#e7d3ac' stroke='#a8895a' stroke-width='2'/>\n<line x1='18' y1='8' x2='18' y2='112' stroke='#c2a877' stroke-width='1'/>\n<line x1='162' y1='8' x2='162' y2='112' stroke='#c2a877' stroke-width='1'/>\n<g stroke='#8a7249' stroke-width='1.4' opacity='.8'>\n<line x1='30' y1='14' x2='30' y2='106'/><line x1='46' y1='14' x2='46' y2='106'/>\n<line x1='62' y1='14' x2='62' y2='106'/><line x1='78' y1='14' x2='78' y2='106'/>\n<line x1='94' y1='14' x2='94' y2='106'/><line x1='110' y1='14' x2='110' y2='106'/>\n<line x1='126' y1='14' x2='126' y2='106'/><line x1='142' y1='14' x2='142' y2='106'/>\n</g>\n<!-- 竖排墨字点 -->\n<g fill='#5a4a30' opacity='.72'>\n<rect x='34' y='24' width='6' height='6'/><rect x='34' y='38' width='6' height='6'/><rect x='34' y='52' width='6' height='6'/>\n<rect x='66' y='24' width='6' height='6'/><rect x='66' y='38' width='6' height='6'/><rect x='66' y='60' width='6' height='6'/>\n<rect x='98' y='24' width='6' height='6'/><rect x='98' y='46' width='6' height='6'/><rect x='98' y='60' width='6' height='6'/>\n<rect x='130' y='30' width='6' height='6'/><rect x='130' y='44' width='6' height='6'/>\n</g>\n</g>\n<!-- 卷轴轴头 -->\n<rect x='140' y='20' width='10' height='132' rx='5' fill='#8a6a3e'/>\n<rect x='330' y='20' width='10' height='132' rx='5' fill='#8a6a3e'/>\n<!-- 朱印 -->\n<rect x='352' y='112' width='42' height='42' rx='3' fill='none' stroke='#a8402f' stroke-width='2.5'/>\n<text x='373' y='140' font-size='20' fill='#a8402f' text-anchor='middle' font-family='serif'>鑑</text>\n<!-- 飞鸟 -->\n<path d='M60 44 q6 -5 12 0 q6 -5 12 0' stroke='#7a6a4c' stroke-width='1.8' fill='none' stroke-linecap='round'/>\n</svg>",
+  questions: [
+    {t: "一件坏事被你提前看出来了，但没人问你，你会？", o: [["直接说，哪怕现在说不太合时宜", "cc"], ["先找信得过的人通个气，再看时机", "lb"], ["把手上能补的先补上，边做边说", "zgl"], ["先按住，等信息更全了再开口", "smy"]]},
+    {t: "局面突然失控，你的第一反应是？", o: [["先动起来，把能稳的稳住", "sq"], ["先把人聚齐，别各自乱跑", "xa"], ["先排步骤，别乱了章法", "wz"], ["先不急，看清了再说", "fxl"]]},
+    {t: "有人当众提了不同意见，你更可能？", o: [["当场把理辩清楚", "gzy"], ["先听完，回头单独再聊", "lsm"], ["记下来，事后自己复盘一遍", "cc"], ["笑一下，不急着表态", "lb"]]},
+    {t: "一件事你明明能做，但有更合适的人，你会？", o: [["我来更快，先做掉再说", "zgl"], ["让他来，我把边界交代清楚", "smy"], ["陪他做一遍，把流程理顺", "sq"], ["先放着，看他要不要接", "xa"]]},
+    {t: "你最不习惯哪种处境？", o: [["反复开会却没人拍板", "wz"], ["所有事都得自己扛", "fxl"], ["话说得漂亮但不落地", "gzy"], ["气氛紧到不能说真话", "lsm"]]},
+    {t: "压力最大的那几天，你靠什么撑？", o: [["把事一件件划掉", "cc"], ["有人能说句话就够了", "lb"], ["按自己排好的表走", "zgl"], ["先睡一觉，明天再说", "smy"]]},
+    {t: "被误解了，你通常？", o: [["当场解释清楚", "sq"], ["不急，过会儿找机会说", "xa"], ["把该做的做完，让结果说话", "wz"], ["先不辩，等风头过去", "fxl"]]},
+    {t: "一个机会摆在面前，但时机有点早，你会？", o: [["先接了，边做边调", "gzy"], ["先问问能不能有人一起", "lsm"], ["先把条件和退路列清楚", "cc"], ["再等等，不到时候不动", "lb"]]},
+    {t: "团队里有人一直不说话，你会？", o: [["直接点名问他怎么想", "zgl"], ["私下问一句，别让他为难", "smy"], ["把流程改成人人都要交一句", "sq"], ["不催，他想说时自然会说", "xa"]]},
+    {t: "你更怕哪一种结果？", o: [["想太多，最后没动手", "wz"], ["事成了，人却散了", "fxl"], ["全靠自己，累到没余地", "gzy"], ["出手太早，把牌打明", "lsm"]]},
+    {t: "收到刺耳的反馈，你第一反应？", o: [["先确认哪里说得对", "cc"], ["先消化一下情绪", "lb"], ["对照自己原来的判断改一遍", "zgl"], ["记着，过几天再看", "smy"]]},
+    {t: "如果只能选一个，你更想被怎么记住？", o: [["「事到临头他真上」", "sq"], ["「跟他干活心里踏实」", "xa"], ["「有他在就不会乱」", "wz"], ["「他不急，但总等到对的」", "fxl"]]},
+    {t: "计划被临时推翻，你会？", o: [["马上换一版，先跑起来", "gzy"], ["先跟大家说清楚，别慌", "lsm"], ["把新步骤重新排一遍", "cc"], ["先暂停，看清楚再动", "lb"]]},
+    {t: "你交代事情的习惯更像？", o: [["说个方向，让人自己发挥", "zgl"], ["说清边界，其余不插手", "smy"], ["连可能出岔的地方都写上", "sq"], ["先不细说，做起来再看", "xa"]]},
+    {t: "碰到特别难缠的人，你更可能？", o: [["把话摊开，一次说清", "wz"], ["找个都能下台的说法", "fxl"], ["按规矩来，不掺情绪", "gzy"], ["少接触，时间会解决", "lsm"]]},
+    {t: "事情做成之后，你通常？", o: [["马上想下一件", "cc"], ["先把一起做的人谢一遍", "lb"], ["回头看哪一步还能更顺", "zgl"], ["安静收尾，不声张", "smy"]]},
+    {t: "你更信哪一种判断？", o: [["做起来才知道对不对", "sq"], ["几个人聊过之后才踏实", "xa"], ["推演清楚了才放心", "wz"], ["放一放，答案自己会浮出来", "fxl"]]},
+    {t: "被人抢了功，你会？", o: [["当场把话说明白", "gzy"], ["不争，但该知道的得知道", "lsm"], ["把记录补齐，下次别再发生", "cc"], ["算了，不值得耗", "lb"]]},
+    {t: "夜里脑子停不下来，多半是在？", o: [["盘明天先动哪一步", "zgl"], ["想白天那句没说好的话", "smy"], ["把没排完的步骤过一遍", "sq"], ["等一个还没到的时机", "xa"]]},
+    {t: "你更欣赏哪种「厉害」？", o: [["敢在乱里先拍板", "wz"], ["能让一群人愿意跟着", "fxl"], ["把复杂的事理得清清楚楚", "gzy"], ["沉得住气，最后一击", "lsm"]]},
+    {t: "如果重来一次，你最想改的是？", o: [["别犹豫那么久", "cc"], ["多顾着点身边人", "lb"], ["别什么都自己揽", "zgl"], ["别急着亮底牌", "smy"]]},
+    {t: "一句话形容你做事的样子，会是？", o: [["先做了再说", "sq"], ["人在，事就在", "xa"], ["章法不能乱", "wz"], ["不急，等得起", "fxl"]]},
+    {t: "有人替你把决定做好了，你？", o: [["直接说自己原本怎么想", "gzy"], ["先谢过，再补一句边界", "lsm"], ["问清依据，好记下来", "cc"], ["先接受，留着以后再说", "lb"]]},
+    {t: "最后，你希望别人怎么评价和你共事？", o: [["「跟他不用猜」", "zgl"], ["「他不会丢下人」", "smy"], ["「交给他就稳了」", "sq"], ["「他不逼人，但靠得住」", "xa"]]},
+  ],
+  types: [
+    {k:"cc", n:"曹操 · 先做再说型", tag:"不等想通才动手，你信「做着做着就清楚了」", body:["你选的多是「先动」：局面乱的时候不先纠结对错，先把它稳住，再回头收拾细节。这不是莽，是你不太愿意把力气花在反复推演上。", "《资治通鉴》写官渡前后，最动人的不是谋略，是那种「事到临头不内耗」的劲。心理学里这叫行动取向——先让局面动起来，焦虑反而没地方落脚。", "可以留意的是：动手快的人，偶尔会跳过「别人跟没跟上」。收尾时留半步给同伴，事会更稳。"], gift:"想不通的时候，先做一件小的，路常常是走出来的。", share:"测出来像曹操，理由是「不等想通才动手」。行吧，是我。\n{link}"},
+    {k:"lb", n:"刘备 · 长线联结型", tag:"你把人放在事前面，也扛得住慢", body:["你的选择里，「有没有人一起」几乎总是先于「这事多快成」。你愿意慢热、愿意多解释一句、愿意让人先舒服下来。", "《资治通鉴》里最耐看的不是某场胜仗，是那种颠沛里仍把人聚住的能力。关系取向的人不是没锋芒，是把力气存成了长期的东西。", "小提醒：总先照顾别人，容易把自己的累放到最后才说。你也该被问一句「你还好吗」。"], gift:"走得慢不要紧，身边一直有人，就是最快的路。", share:"像刘备……「把人放在事前面」，这句有点戳。\n{link}"},
+    {k:"zgl", n:"诸葛亮 · 秩序责任型", tag:"事情交到你手上，你会忍不住把它做周全", body:["你选的几乎都指向「先有章法」：把步骤排好、把风险想到、把该交代的都交代清楚。你不太放心「差不多就行」。", "治蜀那段最被记住的不是奇谋，是事事有交代的秩序感。尽责的人给人极强的安全感，代价是——你很容易把「别人的部分」也一并扛了。", "一句提醒：周全不等于全揽。允许有件事只做到八分，天不会塌。"], gift:"你不必把所有事都扛成自己的，才算交代得过去。", share:"诸葛亮型：「忍不住把它做周全」。被看见了，也有点被提醒了。\n{link}"},
+    {k:"smy", n:"司马懿 · 藏锋等待型", tag:"不争一时，你等得起", body:["你在好几道题里都选了「先不急」：不抢话、不抢功、不在气势最盛时表态。你不是没想法，是更在意时机对不对。", "《资治通鉴》写到后发制人时，最见功夫的从来不是那一刻的翻盘，是之前漫长的按住不动。延迟满足这件事，你天生就会。", "要留意的是：等得太久，偶尔会把「现在也可以」错过。等得起，也要敢接住。"], gift:"不争一时不是退，是你把决定权留在了自己手里。", share:"司马懿型：「不争一时，等得起」。测完沉默了一下。\n{link}"},
+    {k:"sq", n:"孙权 · 平衡授权型", tag:"你不亲自动手，也能让局面稳住", body:["你偏好的是「把人放对位置」：不事事自己上，也不撒手不管，让各方都有余地。你很会听，也很会在关键处拍一下。", "据江东那段最难的不是打，是长期让不同的人都还肯留在桌上。心理学里这叫协调型控制——管的是结构，不是每个动作。", "小提醒：太会平衡的人，容易把自己的主张磨平。偶尔也明确说一次「我想要这个」。"], gift:"能让别人各就其位，本身就是一种很硬的实力。", share:"孙权型：「不亲自动手，也能让局面稳住」。这个评价我收下了。\n{link}"},
+    {k:"xa", n:"谢安 · 临事从容型", tag:"越大的事，你越不慌", body:["你选的多是「先稳住」：消息来了不急着反应，先把节奏按住，再慢慢说怎么办。你的稳不是没情绪，是不让它先跑出来。", "淝水那一段最被反复讲的就是那份「棋还没下完」的从容。情绪调节里最高级的一档，就是不在最吵的那一刻做决定。", "可以留意：太稳的时候，身边的人可能读不出你其实也在意。适当露一点紧张，反而让人安心。"], gift:"大事面前慢半拍，是给判断留位置，不是迟钝。", share:"谢安型：「越大的事越不慌」。原来这也算一种能力。\n{link}"},
+    {k:"wz", n:"魏征 · 认理不认人型", tag:"该说的那句话，你憋不住", body:["你在好几处选了「直说」：哪怕场合不那么方便、哪怕对方不太想听。你不是爱抬杠，是心里那条线不太肯挪。", "贞观君臣那段最珍贵的，是有人肯把逆耳的话说到明处。边界清楚、就事论事的人，往往最能挡住集体往偏处走。", "小提醒：理说清楚了，也留一句给对方下台。直和硬，中间还差半步。"], gift:"敢说真话的人，最好也把善意一并说出口。", share:"魏征型：「该说的那句话憋不住」。是我，也是我的麻烦。\n{link}"},
+    {k:"fxl", n:"房玄龄 · 幕后周全型", tag:"你把台前让出去，把事情接住了", body:["你选的偏「把系统搭好」：不抢那个被看见的位置，但少了你，很多事就接不上。你擅长把零碎理成能跑的流程。", "贞观里被记成「筹谋」的那类人，多半不在最亮的地方。心理学上这叫支撑性贡献——不显眼，却决定整体能不能稳。", "一句提醒：不站到台前，也别把功劳一并让掉。你的部分，值得被点名。"], gift:"不是所有重要都发光，但少了你真的转不动。", share:"房玄龄型：「把台前让出去，把事情接住了」。有点想哭。\n{link}"},
+    {k:"gzy", n:"郭子仪 · 进退有度型", tag:"能进也能退，你不把路走绝", body:["你的选择都留着余地：得势时不把话说满，收场时也不结怨。你很清楚什么时候该站出来、什么时候该往后一步。", "《资治通鉴》里最难写的其实是「功成之后还能好好收场」。分寸感不是圆滑，是你既护住了事，也护住了人。", "可以留意：总在替局面留余地时，别把自己真正想要的一直往后排。"], gift:"进退都体面，是因为你始终知道自己在守什么。", share:"郭子仪型：「不把路走绝」。这大概是我最想要的状态。\n{link}"},
+    {k:"lsm", n:"李世民 · 复盘纳谏型", tag:"你肯听逆耳的话，也肯改自己的判断", body:["你在好几题里选了「先听、再改」：不把「我说了算」当成安全感，反而愿意被纠正，事后还会回头复盘一遍。", "贞观最被后世惦记的不是疆域，是那种肯把不同意见留在身边的气度。能容纳反馈的人，判断会越用越准。", "小提醒：太会自省的人，容易把复盘开成自我审判。改完就翻篇，别一直重播。"], gift:"肯被纠正，不是没主见，是主见经得起修。", share:"李世民型：「肯听逆耳的话，也肯改」。这条我要留着。\n{link}"}
+  ]
+};</script>
+<script>/* 心里那点事 · 答题引擎
+   纯前端单页：封面 → 0.99 解锁码门禁 → N 题 → 结果报告
+   答案只在本地计算，不上传、不收集任何信息
+   可选封面增强字段（旧数据不填即保持原样）：
+     theme      : 'teal' | 'ink'   → 给 .wrap 加主题 class
+     coverArt   : 内联 SVG 字符串  → 封面装饰插画
+     slogan     : 手写体标语
+     pill       : true             → 4 维度改成胶囊网格
+*/
+(function(){
+  var D = window.QUIZ_DATA;
+  var C = window.SHOP_CONFIG;
+  var app = document.getElementById('app');
+  var answers = [], idx = 0;
+  var LS = 'unlock_' + D.id;
+
+  if(D.theme){ var w=document.querySelector('.wrap'); if(w) w.classList.add('theme-'+D.theme); }
+
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function unlocked(){ try{ return localStorage.getItem(LS)==='1'; }catch(e){ return false; } }
+  function setUnlocked(){ try{ localStorage.setItem(LS,'1'); }catch(e){} }
+  function head(){ return '<div class="topbar"><span class="brand"><span class="dot"></span>'+esc(C.series)+'</span><a href="index.html">全部测试</a></div>'; }
+  function toast(t){
+    var el=document.getElementById('toast');
+    if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast'; document.body.appendChild(el); }
+    el.textContent=t; el.classList.add('show');
+    clearTimeout(window.__t); window.__t=setTimeout(function(){el.classList.remove('show');},1900);
+  }
+  function copy(text,msg){
+    var ok=function(){toast(msg||'已复制');};
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(ok,fb); } else fb();
+    function fb(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); ok(); }catch(e){ toast('复制失败，请长按选择文字'); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  /* ---------- 封面 ---------- */
+  function renderCover(){
+    var checks = D.checks.map(function(c){
+      if(D.pill) return '<li><span class="ck">✓</span><span class="pt"><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span></li>';
+      return '<li><span class="ck">✓</span><span><b>'+esc(c[0])+'</b> ｜ '+esc(c[1])+'</span></li>';
+    }).join('');
+    var art = D.coverArt ? '<div class="cover-art">'+D.coverArt+'</div>' : '';
+    var slogan = D.slogan ? '<div class="slogan">'+esc(D.slogan)+'</div>' : '';
+    app.innerHTML = head()+
+      '<div class="cover">'+
+        '<div class="vol"><span>'+esc(D.vol)+'</span><span>'+esc(D.quizCount)+'</span></div>'+
+        '<span class="cover-tag">'+esc(D.tag)+'</span>'+
+        '<h1 class="cover-title">'+D.title+'</h1>'+
+        '<p class="cover-sub">'+esc(D.subtitle)+'</p>'+
+        art+
+        '<ul class="checklist'+(D.pill?' pill':'')+'">'+checks+'</ul>'+
+        slogan+
+        '<button class="cover-btn" id="go">点击测试 →</button>'+
+        '<div class="meta"><span><b>'+D.questions.length+'</b> 道题</span><span>约 <b>'+esc(D.minutes)+'</b> 分钟</span><span><b>'+D.types.length+'</b> 种结果</span><span>凭第一直觉选</span></div>'+
+      '</div>'+
+      '<div class="paywall" id="pw">'+
+        '<div class="lock">🔒</div>'+
+        '<div class="price">¥'+esc(C.price)+'<small>/ 份 · 虚拟商品</small></div>'+
+        '<h3>拍下后，才能开始测</h3>'+
+        '<p>拍下后平台会「自动发货」，把<b>解锁码</b>发给你。在下面输入就能开始，答案只在你自己手机里计算。</p>'+
+        '<input class="code-input" id="code" placeholder="输入自动发货消息里的解锁码" autocomplete="off" spellcheck="false">'+
+        '<div class="err" id="err"></div>'+
+        '<button class="btn hl" id="unlock">输入解锁码，开始测试</button>'+
+        (C.shopUrl ? '<div class="btn-row"><a class="btn ghost" href="'+esc(C.shopUrl)+'" target="_blank" rel="noopener">还没拍？去拍下 ¥'+esc(C.price)+' →</a></div>' : '')+
+        '<p class="pay-note">'+esc(D.disclaimer)+'</p>'+
+      '</div>'+
+      '<div class="src">'+D.source+'</div>'+
+      '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
+    document.getElementById('go').onclick=function(){
+      if(unlocked()){ answers=[]; idx=0; renderQuestion(); }
+      else { document.getElementById('pw').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('code').focus(); toast('先输入解锁码就能开始～'); }
+    };
+    document.getElementById('unlock').onclick=function(){
+      var v=(document.getElementById('code').value||'').trim().toUpperCase();
+      var list=(C.codes[D.id]||[]).map(function(x){return x.toUpperCase();});
+      if(!v){ document.getElementById('err').textContent='请先输入解锁码'; return; }
+      if(list.indexOf(v)<0){ document.getElementById('err').textContent='解锁码不对，检查一下自动发货消息里的码'; return; }
+      setUnlocked(); answers=[]; idx=0; renderQuestion();
+    };
+    window.scrollTo(0,0);
+  }
+
+  /* ---------- 答题 ---------- */
+  function renderQuestion(){
+    var q=D.questions[idx];
+    var pct=Math.round(idx/D.questions.length*100);
+    var opts=q.o.map(function(o,i){
+      return '<button class="opt" data-v="'+i+'"><span class="k">'+String.fromCharCode(65+i)+'</span>'+esc(o[0])+'</button>';
+    }).join('');
+    app.innerHTML = head()+
+      '<div class="quiz">'+
+        '<div class="qcount">第 '+(idx+1)+' / '+D.questions.length+' 题</div>'+
+        '<div class="progress"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="qtitle">'+esc(q.t)+'</div>'+
+        '<div class="qhint">凭第一直觉选，别想太多～</div>'+
+        '<div class="opts">'+opts+'</div>'+
+        (idx>0?'<div class="backlink" id="back">← 上一题</div>':'')+
+      '</div>'+
+      '<div class="footer">'+esc(C.series)+'</div>';
+    var bs=app.querySelectorAll('.opt');
+    Array.prototype.forEach.call(bs,function(b){
+      b.onclick=function(){
+        Array.prototype.forEach.call(bs,function(x){x.classList.remove('on');});
+        b.classList.add('on');
+        var v=parseInt(b.getAttribute('data-v'),10);
+        setTimeout(function(){
+          answers[idx]=q.o[v][1]; idx++;
+          if(idx>=D.questions.length) renderResult(); else renderQuestion();
+        },160);
+      };
+    });
+    if(idx>0) document.getElementById('back').onclick=function(){idx--;renderQuestion();};
+    window.scrollTo(0,0);
+  }
+
+  /* ---------- 结果 ---------- */
+  function renderResult(){
+    var score={}; D.types.forEach(function(t){score[t.k]=0;});
+    answers.forEach(function(k){ if(k in score) score[k]++; });
+    var sorted=D.types.slice().sort(function(a,b){return score[b.k]-score[a.k];});
+    var win=sorted[0], total=D.questions.length;
+    var pct=Math.round(score[win.k]/total*100);
+    var max=Math.max.apply(null,D.types.map(function(t){return score[t.k];}))||1;
+    var bars=D.types.map(function(t){
+      var v=Math.round(score[t.k]/max*100);
+      return '<div class="bar'+(t.k===win.k?' top':'')+'"><div class="lab"><span>'+esc(t.n)+'</span><b>'+score[t.k]+'</b></div>'+
+             '<div class="track"><i style="width:'+Math.max(2,v)+'%"></i></div></div>';
+    }).join('');
+    var all=D.types.map(function(t,i){
+      return '<div class="allrow"><span class="n">'+(i+1<10?'0':'')+(i+1)+'</span><span class="nm">'+esc(t.n)+'</span><span class="ds">'+esc(t.tag)+'</span></div>';
+    }).join('');
+    var body=win.body.map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
+    var share=win.share.replace(/\{link\}/g,location.href.split('#')[0]);
+    app.innerHTML = head()+
+      '<div class="result">'+
+        '<div class="result-tag">'+esc(D.vol)+' · 你的报告</div>'+
+        '<h2 class="result-title">'+esc(win.n)+'</h2>'+
+        '<div class="result-lead">'+esc(win.tag)+'</div>'+
+        '<div class="concentration"><b>'+pct+'%</b> 成分浓度 · 你选了 '+score[win.k]+' / '+total+' 题指向它</div>'+
+        '<div class="result-body">'+body+'</div>'+
+        '<div class="gift"><span class="lab">可以带走的一句话</span>'+esc(win.gift)+'</div>'+
+        '<div class="bars"><div class="share-box" style="border:0;padding-top:18px;margin-top:0"><div class="lab">十种类型的成分条</div></div>'+bars+'</div>'+
+        '<div class="share-box">'+
+          '<div class="lab">一键复制 · 发笔记/发给朋友</div>'+
+          '<div class="share-text" id="st">'+esc(share)+'</div>'+
+          '<div class="btn-row"><button class="btn small hl" id="cs">复制文案</button><button class="btn small ghost" id="cl">复制测试链接</button></div>'+
+          '<div class="btn-row"><button class="btn small ghost" id="again">重新测一次</button></div>'+
+        '</div>'+
+        '<div class="allresults"><h4>查看全部 '+D.types.length+' 种结果</h4>'+all+'</div>'+
+      '</div>'+
+      '<div class="note">'+esc(D.disclaimer)+'</div>'+
+      '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
+    document.getElementById('cs').onclick=function(){copy(share,'文案已复制，去发笔记吧');};
+    document.getElementById('cl').onclick=function(){copy(location.href.split('#')[0],'测试链接已复制');};
+    document.getElementById('again').onclick=function(){answers=[];idx=0;renderQuestion();};
+    window.scrollTo(0,0);
+  }
+
+  renderCover();
+})();
+</script>
+</body></html>
