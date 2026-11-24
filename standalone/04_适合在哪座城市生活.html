@@ -247,21 +247,157 @@ window.SHOP_CONFIG = {
 
   // 3) 解锁码：付款后由「自动发货」发给买家，买家在测试页输入即可开始
   //    这里做成「一批通码」，简单好上手；要「一人一码」请看文档里的平台方案
-  //    ⚠️ 上线前请把 DEMO2026 删掉，只留你自己的码
   codes: {
-    "ta":        ["DEMO2026", "TA-520", "XINDONG-01"],
-    "banwei":    ["DEMO2026", "BW-996", "BANWEI-01"],
-    "innerdrama":["DEMO2026", "NX-108", "NEIXIN-01"],
-    "city":      ["DEMO2026", "CITY-01", "CHENGSHI-01"],
-    "zizhi":     ["DEMO2026", "ZZTJ-01", "JIAN-01"]
+    "ta":        ["TA-520", "XINDONG-01"],
+    "banwei":    ["BW-996", "BANWEI-01"],
+    "innerdrama":["NX-108", "NEIXIN-01"],
+    "city":      ["CITY-01", "CHENGSHI-01"],
+    "zizhi":     ["ZZTJ-01", "JIAN-01"]
   },
 
   // 4) 自动发货消息模板（复制去平台后台用，{link} 换成部署后的链接，{code} 换成码）
   deliveryText: "感谢拍下～\n测试链接：{link}\n解锁码：{code}\n打开链接输入解锁码即可开始，答案只在你自己手机里计算，不上传。\n（虚拟商品，一经发出不支持退款，介意慎拍；仅供娱乐，不是心理诊断）",
 
   // 5) 品牌名（会显示在每页顶部）
-  series: "心里那点事 · 趣味小测"
+  series: "心里那点事 · 趣味小测",
+
+  // 6) 访问统计（画像分析用；不填 = 完全不统计、不发任何请求）
+  //    —— 二选一，别同时填 ——
+  //    【方式 A 推荐】注册 51LA https://v6.51.la/ 或百度统计 https://tongji.baidu.com，
+  //      添加站点后把平台给的「整段统计代码」原样粘进下面两个反引号之间。
+  //      用反引号（不是双引号）就是为了能容纳代码里的双引号和换行，一个字都不用改。
+  //      平台以后改格式也不会失效。
+  //    【方式 B】只填 ID：provider "51la" 需 id(项目ID)+ck(校验密钥)；
+  //      provider "baidu" 只需 id(hm.js? 后面那串)。
+  //    填好后双击 一键部署到GitHub.bat 重跑一次即生效。
+  //    渠道追踪：小红书发链接加 ?from=xhs，抖音 ?from=douyin，公众号 ?from=wx。
+  stats: {
+    snippet: `<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"><\/script>
+<script>LA.init({id:"3RviySM8ztI6eZPP",ck:"3RviySM8ztI6eZPP"})<\/script>`,      // 方式 A：整段 <script> 代码粘进两个反引号之间
+    provider: "",     // 方式 B："51la" 或 "baidu"
+    id: "",           // 方式 B：项目ID / siteId
+    ck: ""            // 方式 B：51LA 校验密钥（百度留空）
+  }
 };
+</script>
+<script>/* ============================================================
+   统计埋点层 · 画像分析用
+   ------------------------------------------------------------
+   【怎么启用】二选一，改 config.js 的 stats，然后重跑 一键部署到GitHub.bat：
+
+   方式 A（推荐，最省事、永不怕平台改版）：
+     注册 51LA https://v6.51.la/ 或百度统计 https://tongji.baidu.com，
+     添加站点后复制平台给的「整段统计代码」，原样粘进 stats.snippet 里。
+     本文件会把这段 script 真正执行（innerHTML 注入的 script 不会执行，需重建节点）。
+
+   方式 B（只填 ID）：
+     stats.provider = "51la"  → 填 id（项目ID）+ ck（校验密钥）
+     stats.provider = "baidu" → 填 id（hm.js? 后面那串 siteId）
+
+   什么都不填 = 完全不加载、不上报任何数据、不发任何请求。
+
+   【记录的事件】自动带渠道标签
+     visit        打开某测试页（label = 测试id）
+     paywall_view 付费墙展示
+     code_submit  提交了解锁码
+     unlock_ok / unlock_fail  解锁成功 / 失败
+     result_view  看到结果（label = 结果名 → 画像分析核心）
+     share_copy   复制分享文案 / 链接
+     shop_click   点「去拍下」
+     card_click   首页点测试卡片
+
+   【渠道追踪】链接加 ?from=xxx，例如
+     https://wangtaotu9-ctrl.github.io/xinli-quiz/ta.html?from=xhs
+     小红书发 ?from=xhs、抖音发 ?from=douyin、公众号发 ?from=wx，
+     该访客本次所有事件都会带上渠道标签（sessionStorage 记住）。
+
+   【隐私】只记录匿名聚合行为（页面/事件/来源/设备/地域），
+     不采集姓名、手机号、微信号等任何个人身份信息，答案也只在本地计算。
+   ============================================================ */
+(function(){
+  var S = (window.SHOP_CONFIG && window.SHOP_CONFIG.stats) || {};
+  var snippet = (S.snippet || '').trim();
+  var provider = S.provider || '';
+  var id = (S.id || '').trim();
+  var ck = (S.ck || '').trim();
+  var enabled = !!(snippet || (provider && id));
+
+  /* ---------- 渠道 ---------- */
+  var CH = '';
+  try{
+    var m = location.search.match(/[?&](?:from|ch|src|utm_source)=([^&#]{1,20})/);
+    if(m){ CH = decodeURIComponent(m[1]); sessionStorage.setItem('xn_ch', CH); }
+    else { CH = sessionStorage.getItem('xn_ch') || 'direct'; }
+  }catch(e){ CH = 'direct'; }
+  CH = CH.replace(/[^a-zA-Z0-9_\u4e00-\u9fa5-]/g, '').slice(0, 20) || 'direct';
+
+  /* ---------- 注入统计代码 ---------- */
+  function execSnippet(code){
+    var box = document.createElement('div');
+    box.innerHTML = code;
+    var list = box.querySelectorAll('script');
+    Array.prototype.forEach.call(list, function(old){
+      var s = document.createElement('script');
+      Array.prototype.forEach.call(old.attributes, function(a){ s.setAttribute(a.name, a.value); });
+      // 动态创建的 script 默认 async，会打乱「外链SDK → 内联 LA.init」的顺序，
+      // 强制 async=false 保证按粘贴顺序同步执行（与静态 HTML 里一致）
+      s.async = false;
+      if(old.src){ s.src = old.src; }
+      else { s.textContent = old.textContent; }
+      document.head.appendChild(s);
+    });
+  }
+
+  function inject(){
+    if(!enabled) return;
+    try{
+      if(snippet){ execSnippet(snippet); return; }
+      if(provider === '51la'){
+        // 51LA V6 新版：先加载 SDK，onload 后 LA.init({id, ck})
+        var a = document.createElement('script');
+        a.src = 'https://sdk.51.la/js-sdk-pro.min.js';
+        a.onload = function(){
+          try{ if(window.LA && window.LA.init) window.LA.init({ id: id, ck: ck || true, autoTrack: true }); }catch(e){}
+        };
+        document.head.appendChild(a);
+      } else if(provider === 'baidu'){
+        window._hmt = window._hmt || [];
+        var b = document.createElement('script');
+        b.src = 'https://hm.baidu.com/hm.js?' + encodeURIComponent(id);
+        document.head.appendChild(b);
+      }
+    }catch(e){}
+  }
+
+  /* ---------- 事件埋点：运行时探测平台 API，snippet / ID 两种模式通用 ---------- */
+  function track(ev, label){
+    if(!enabled) return;
+    var full = (label || '-') + '@' + CH;
+    try{
+      if(window._hmt){
+        window._hmt.push(['_trackEvent', 'quiz', ev, full]);
+      } else if(window.LA && window.LA.track){
+        window.LA.track(ev, { label: full });
+      }
+    }catch(e){}
+  }
+
+  inject();
+
+  /* 首页卡片点击：事件委托，index.html 只需 data-track 属性 */
+  document.addEventListener('click', function(e){
+    var el = e.target;
+    while(el && el !== document.body){
+      if(el.getAttribute && el.getAttribute('data-track')){
+        track(el.getAttribute('data-track'), el.getAttribute('data-label') || '');
+        break;
+      }
+      el = el.parentNode;
+    }
+  }, true);
+
+  window.XN_TRACK = track;
+})();
 </script>
 <script>/* NO.04 测一测，你适合在哪座城市生活 —— 34 题 · 10 座城市 · 青绿封面（复刻抖音截图） */
 window.QUIZ_DATA = {
@@ -348,6 +484,8 @@ window.QUIZ_DATA = {
   var app = document.getElementById('app');
   var answers = [], idx = 0;
   var LS = 'unlock_' + D.id;
+  var T = window.XN_TRACK || function(){};   // 统计埋点：config.js stats.id 留空时为空操作
+  T('visit', D.id);
 
   if(D.theme){ var w=document.querySelector('.wrap'); if(w) w.classList.add('theme-'+D.theme); }
 
@@ -400,11 +538,16 @@ window.QUIZ_DATA = {
         '<input class="code-input" id="code" placeholder="输入自动发货消息里的解锁码" autocomplete="off" spellcheck="false">'+
         '<div class="err" id="err"></div>'+
         '<button class="btn hl" id="unlock">输入解锁码，开始测试</button>'+
-        (C.shopUrl ? '<div class="btn-row"><a class="btn ghost" href="'+esc(C.shopUrl)+'" target="_blank" rel="noopener">还没拍？去拍下 ¥'+esc(C.price)+' →</a></div>' : '')+
+        (C.shopUrl ? '<div class="btn-row"><a class="btn ghost" id="shop" href="'+esc(C.shopUrl)+'" target="_blank" rel="noopener">还没拍？去拍下 ¥'+esc(C.price)+' →</a></div>' : '')+
         '<p class="pay-note">'+esc(D.disclaimer)+'</p>'+
       '</div>'+
       '<div class="src">'+D.source+'</div>'+
       '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
+    T('paywall_view');
+    if(C.shopUrl){
+      var shopEl=document.getElementById('shop');
+      if(shopEl) shopEl.onclick=function(){ T('shop_click', D.id); };
+    }
     document.getElementById('go').onclick=function(){
       if(unlocked()){ answers=[]; idx=0; renderQuestion(); }
       else { document.getElementById('pw').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('code').focus(); toast('先输入解锁码就能开始～'); }
@@ -412,8 +555,10 @@ window.QUIZ_DATA = {
     document.getElementById('unlock').onclick=function(){
       var v=(document.getElementById('code').value||'').trim().toUpperCase();
       var list=(C.codes[D.id]||[]).map(function(x){return x.toUpperCase();});
+      T('code_submit');
       if(!v){ document.getElementById('err').textContent='请先输入解锁码'; return; }
-      if(list.indexOf(v)<0){ document.getElementById('err').textContent='解锁码不对，检查一下自动发货消息里的码'; return; }
+      if(list.indexOf(v)<0){ T('unlock_fail'); document.getElementById('err').textContent='解锁码不对，检查一下自动发货消息里的码'; return; }
+      T('unlock_ok');
       setUnlocked(); answers=[]; idx=0; renderQuestion();
     };
     window.scrollTo(0,0);
@@ -489,8 +634,9 @@ window.QUIZ_DATA = {
       '</div>'+
       '<div class="note">'+esc(D.disclaimer)+'</div>'+
       '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
-    document.getElementById('cs').onclick=function(){copy(share,'文案已复制，去发笔记吧');};
-    document.getElementById('cl').onclick=function(){copy(location.href.split('#')[0],'测试链接已复制');};
+    T('result_view', win.k + '|' + win.n);
+    document.getElementById('cs').onclick=function(){ T('share_copy','文案'); copy(share,'文案已复制，去发笔记吧'); };
+    document.getElementById('cl').onclick=function(){ T('share_copy','链接'); copy(location.href.split('#')[0],'测试链接已复制'); };
     document.getElementById('again').onclick=function(){answers=[];idx=0;renderQuestion();};
     window.scrollTo(0,0);
   }
