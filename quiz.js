@@ -13,6 +13,8 @@
   var app = document.getElementById('app');
   var answers = [], idx = 0;
   var LS = 'unlock_' + D.id;
+  var T = window.XN_TRACK || function(){};   // 统计埋点：config.js stats.id 留空时为空操作
+  T('visit', D.id);
 
   if(D.theme){ var w=document.querySelector('.wrap'); if(w) w.classList.add('theme-'+D.theme); }
 
@@ -65,11 +67,16 @@
         '<input class="code-input" id="code" placeholder="输入自动发货消息里的解锁码" autocomplete="off" spellcheck="false">'+
         '<div class="err" id="err"></div>'+
         '<button class="btn hl" id="unlock">输入解锁码，开始测试</button>'+
-        (C.shopUrl ? '<div class="btn-row"><a class="btn ghost" href="'+esc(C.shopUrl)+'" target="_blank" rel="noopener">还没拍？去拍下 ¥'+esc(C.price)+' →</a></div>' : '')+
+        (C.shopUrl ? '<div class="btn-row"><a class="btn ghost" id="shop" href="'+esc(C.shopUrl)+'" target="_blank" rel="noopener">还没拍？去拍下 ¥'+esc(C.price)+' →</a></div>' : '')+
         '<p class="pay-note">'+esc(D.disclaimer)+'</p>'+
       '</div>'+
       '<div class="src">'+D.source+'</div>'+
       '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
+    T('paywall_view');
+    if(C.shopUrl){
+      var shopEl=document.getElementById('shop');
+      if(shopEl) shopEl.onclick=function(){ T('shop_click', D.id); };
+    }
     document.getElementById('go').onclick=function(){
       if(unlocked()){ answers=[]; idx=0; renderQuestion(); }
       else { document.getElementById('pw').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('code').focus(); toast('先输入解锁码就能开始～'); }
@@ -77,8 +84,10 @@
     document.getElementById('unlock').onclick=function(){
       var v=(document.getElementById('code').value||'').trim().toUpperCase();
       var list=(C.codes[D.id]||[]).map(function(x){return x.toUpperCase();});
+      T('code_submit');
       if(!v){ document.getElementById('err').textContent='请先输入解锁码'; return; }
-      if(list.indexOf(v)<0){ document.getElementById('err').textContent='解锁码不对，检查一下自动发货消息里的码'; return; }
+      if(list.indexOf(v)<0){ T('unlock_fail'); document.getElementById('err').textContent='解锁码不对，检查一下自动发货消息里的码'; return; }
+      T('unlock_ok');
       setUnlocked(); answers=[]; idx=0; renderQuestion();
     };
     window.scrollTo(0,0);
@@ -154,8 +163,9 @@
       '</div>'+
       '<div class="note">'+esc(D.disclaimer)+'</div>'+
       '<div class="footer">'+esc(C.series)+' · 仅供娱乐，不是心理诊断</div>';
-    document.getElementById('cs').onclick=function(){copy(share,'文案已复制，去发笔记吧');};
-    document.getElementById('cl').onclick=function(){copy(location.href.split('#')[0],'测试链接已复制');};
+    T('result_view', win.k + '|' + win.n);
+    document.getElementById('cs').onclick=function(){ T('share_copy','文案'); copy(share,'文案已复制，去发笔记吧'); };
+    document.getElementById('cl').onclick=function(){ T('share_copy','链接'); copy(location.href.split('#')[0],'测试链接已复制'); };
     document.getElementById('again').onclick=function(){answers=[];idx=0;renderQuestion();};
     window.scrollTo(0,0);
   }
